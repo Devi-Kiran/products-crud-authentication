@@ -316,7 +316,7 @@ const Table = () => {
           components={{
             Toolbar: (props) => (
               <div>
-                <Button
+                {userEmail === "admin@gmail.com" && <Button
                   style={{ background: "#007DFC", color: "white" }}
                   onClick={addProductHandler}
                 >
@@ -324,7 +324,7 @@ const Table = () => {
                   <span className="text-xl">
                     <IoMdAddCircleOutline />
                   </span>
-                </Button>
+                </Button>}
                 <MTableToolbar {...props} />
               </div>
             ),
