@@ -46,7 +46,7 @@ function EntryPage() {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      toast.success("Your Account Is Successfully Created, Now You Can Login", {
+      toast.success("Your Account Is Successfully Created", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: true,
