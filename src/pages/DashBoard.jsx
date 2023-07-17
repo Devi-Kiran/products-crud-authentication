@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { SiGooglemarketingplatform } from "react-icons/si";
 import { auth } from "../firebase-config";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import {FaRegUserCircle} from "react-icons/fa";
 
 function DashBoard() {
   const navigate = useNavigate();
@@ -154,7 +155,7 @@ function DashBoard() {
             </div>
             <div className="flex items-center">
               <div className="flex items-center ml-3">
-                <div className="flex ">
+                <div className="flex items-center">
                   <p className="hidden sm:block font-bold capitalize mr-2 items-center">
                     welcome {extractUsernameFromEmail(userEmail?.email)}
                   </p>
@@ -165,12 +166,7 @@ function DashBoard() {
                     aria-expanded="false"
                     data-dropdown-toggle="dropdown-user"
                   >
-                    <span className="sr-only">Open user menu</span>
-                    <img
-                      className="w-8 h-8 rounded-full"
-                      src="https://cutewallpaper.org/24/profile-icon-png/account-bef51-user-99666-profile-9401d-avatar-016db-avatar-e968c-user-7405e-profile-7b65c-icon-33322-hd---png---download------kindpng.png"
-                      alt="user photo"
-                    />
+                    <span className="text-brandColor bg-white text-[32px]"><FaRegUserCircle/></span>
                   </button>
                 </div>
                 <div
@@ -239,7 +235,9 @@ function DashBoard() {
 
       <aside
         id="logo-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform ${showAside ? "-translate-x-0" : "-translate-x-full"} bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700`}
+        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform ${
+          showAside ? "-translate-x-0" : "-translate-x-full"
+        } bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700`}
         aria-label="Sidebar"
       >
         <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
@@ -361,7 +359,7 @@ function DashBoard() {
             <Table />
           </div>
 
-          <footer className="bg-white rounded-xl shadow sm:flex sm:items-center sm:justify-between p-4 sm:p-6 xl:p-8 dark:bg-gray-800">
+          <footer className="bg-white mx-2 rounded-xl shadow sm:flex sm:items-center sm:justify-between p-4 sm:p-6 xl:p-8 dark:bg-gray-800">
             <p className="mb-4 text-sm text-center text-gray-500 dark:text-gray-400 sm:mb-0">
               &copy; 2019-2022{" "}
               <a
@@ -369,7 +367,7 @@ function DashBoard() {
                 className="hover:underline"
                 target="_blank"
               >
-                Flowbite.com
+                products.com
               </a>
               . All rights reserved.
             </p>

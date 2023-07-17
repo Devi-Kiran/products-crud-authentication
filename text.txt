@@ -9,7 +9,8 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import MaterialTable, { MTableToolbar } from "material-table";
-import { auth } from "../firebase-config";
+import {auth} from "../firebase-config";
+import { OnStateChanged } from "@material-ui/icons";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { forwardRef } from "react";
 import "react-responsive-modal/styles.css";
@@ -34,9 +35,8 @@ import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { onAuthStateChanged } from "firebase/auth";
-import { BiEdit } from "react-icons/bi";
-import { AiOutlineDelete } from "react-icons/ai";
-import { InfinitySpin } from "react-loader-spinner";
+import {BiEdit} from "react-icons/bi";
+import {AiOutlineDelete} from "react-icons/ai";
 
 const Table = () => {
   const tableIcons = {
@@ -44,26 +44,18 @@ const Table = () => {
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
     Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
     Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-    DetailPanel: forwardRef((props, ref) => (
-      <ChevronRight {...props} ref={ref} />
-    )),
+    DetailPanel: forwardRef((props, ref) => (<ChevronRight {...props} ref={ref} />)),
     Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
     SaveAlt: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
     FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
     LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
     NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => (
-      <ChevronLeft {...props} ref={ref} />
-    )),
+    PreviousPage: forwardRef((props, ref) => (<ChevronLeft {...props} ref={ref} />)),
     ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
     Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref) => (
-      <ArrowDownward {...props} ref={ref} />
-    )),
-    ThirdStateCheck: forwardRef((props, ref) => (
-      <Remove {...props} ref={ref} />
-    )),
+    SortArrow: forwardRef((props, ref) => (<ArrowDownward {...props} ref={ref} />)),
+    ThirdStateCheck: forwardRef((props, ref) => (<Remove {...props} ref={ref} />)),
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
   };
 
@@ -74,19 +66,21 @@ const Table = () => {
   };
 
   const [isAddForm, setIsAddForm] = useState(true);
-  const [userEmail, setUserEmail] = useState("");
-  const [productsInfo, setProducts] = useState({ loading: true, products: [] });
-  const { products } = productsInfo;
+  const [userEmail,setUserEmail] = useState('');
+  const [products, setProducts] = useState([]);
   const productsCollectionRef = collection(db, "products");
 
-  const [tableColumns, setTableColumns] = useState([
+  const [tableColumns,setTableColumns] = useState([
     {
       title: "Image",
       field: "image",
       headerStyle: { ...headerCSS },
       render: (rowData) => (
         <a href={rowData.image} target="_blank">
-          <img src={rowData.image} className="w-10 md:w-20 rounded-md" />
+          <img
+            src={rowData.image}
+            className="w-10 md:w-20 rounded-md"
+          />
         </a>
       ),
     },
@@ -106,7 +100,7 @@ const Table = () => {
       field: "stock",
       type: "numeric",
       headerStyle: { ...headerCSS },
-    },
+    }
   ]);
 
   const adminColumn = {
@@ -136,12 +130,12 @@ const Table = () => {
   };
 
   useEffect(() => {
-    if (userEmail === "admin@gmail.com") {
-      setTableColumns((prevColumns) => {
-        return [...prevColumns, adminColumn];
+    if(userEmail === "admin@gmail.com") {
+      setTableColumns(prevColumns => {
+        return [...prevColumns,adminColumn]
       });
     }
-  }, [userEmail]);
+  },[userEmail]);
 
   ////////////////////////for inputs//////////////////////////
   const [productId, setProductId] = useState("");
@@ -157,16 +151,13 @@ const Table = () => {
   useEffect(() => {
     const getProducts = async () => {
       const data = await getDocs(productsCollectionRef);
-      setProducts({
-        loading: false,
-        products: data.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
-      });
+      setProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getProducts();
 
-    onAuthStateChanged(auth, (currentUser) => {
+    onAuthStateChanged(auth,(currentUser) => {
       setUserEmail(currentUser?.email);
-    });
+    }) 
   }, []);
 
   ////////////////show table row data in inputs////////////////////
@@ -179,70 +170,28 @@ const Table = () => {
     setProductStock(rowData.stock);
     onOpenModal(true);
   };
-
+  
   /////////////////create product in firebase/////////////////////
   const createProduct = async () => {
     try {
-      const product = await addDoc(productsCollectionRef, {
+      await addDoc(productsCollectionRef, {
         name: productName,
         image: productImage,
         price: productPrice,
         stock: productStock,
       });
-
-      console.log(product.id);
-
-      setProducts((prevProductsInfo) => {
-        return {
-          loading: false,
-          products: [
-            ...prevProductsInfo.products,
-            {
-              id: product.id,
-              name: productName,
-              image: productImage,
-              price: productPrice,
-              stock: productStock,
-            },
-          ],
-        };
+      setProducts((prevProducts) => {
+        return [
+          ...prevProducts,
+          {
+            name: productName,
+            image: productImage,
+            price: productPrice,
+            stock: productStock,
+          },
+        ];
       });
-
       toast.success("Successfully Added", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: false,
-        theme: "dark",
-      });
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
-  //////////////////delete product in firebase//////////////////////
-  const deleteProduct = async ({ id }) => {
-    try {
-      const productDoc = doc(db, "products", id);
-      await deleteDoc(productDoc);
-
-      setProducts((prevProductsInfo) => {
-        const updatedProducts = prevProductsInfo?.products?.filter(
-          (product) => {
-            return product.id != id;
-          }
-        );
-
-        return {
-          loading: false,
-          products: updatedProducts,
-        };
-      });
-
-      toast.success("Successfully Deleted", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: true,
@@ -261,21 +210,46 @@ const Table = () => {
   const updateProduct = async (id, name, image, price, stock) => {
     try {
       const productDoc = doc(db, "products", id);
-      const updatedProduct = { id, name, image, price, stock };
+      const updatedProduct = { name, image, price, stock };
       await updateDoc(productDoc, updatedProduct);
 
-      setProducts((prevProductsInfo) => {
-        const updatedProducts = prevProductsInfo.products?.map((product) => {
+      setProducts((prevProducts) => {
+        const updatedProducts = prevProducts?.map((product) => {
           if (product.id === id) {
-            return { ...updatedProduct };
+            return { ...updatedProduct, id };
           }
           return product;
         });
 
-        return { loading: false, products: [...updatedProducts] };
+        toast.success("Successfully Updated", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: false,
+          theme: "dark",
+        });
+        return updatedProducts;
       });
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
 
-      toast.success("Successfully Updated", {
+  //////////////////delete product in firebase//////////////////////
+  const deleteProduct = async ({ id }) => {
+    try {
+      const productDoc = doc(db, "products", id);
+      await deleteDoc(productDoc);
+      setProducts((prevProducts) => {
+        const updatedProducts = prevProducts?.filter(
+          (product) => product.id != id
+        );
+        return updatedProducts;
+      });
+      toast.success("Successfully Deleted", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: true,
@@ -286,7 +260,7 @@ const Table = () => {
         theme: "dark",
       });
     } catch (e) {
-      console.log(e.message);
+      console.message(e);
     }
   };
 
@@ -336,36 +310,21 @@ const Table = () => {
   const defaultMaterialTheme = createTheme();
 
   return (
-    <div className="p-2 relative overflow-scroll sm:overflow-hidden">
-      <div
-        className={`absolute ${
-          productsInfo.loading ? "block" : "hidden"
-        } h-[420px] z-20 w-[98%] flex justify-center items-center`}
-      >
-        <div
-          className={`bg-white h-[150px] w-full flex justify-center items-center ${
-            userEmail === "admin@gmail.com" ? "mt-[90px]" : "mt-[30px]"
-          }`}
-        >
-          <InfinitySpin width="200" color="#007dfc" />
-        </div>
-      </div>
+    <div className="p-2">
       <ThemeProvider theme={defaultMaterialTheme}>
         <MaterialTable
           components={{
             Toolbar: (props) => (
               <div>
-                {userEmail === "admin@gmail.com" && (
-                  <Button
-                    style={{ background: "#007DFC", color: "white" }}
-                    onClick={addProductHandler}
-                  >
-                    Add{" "}
-                    <span className="text-xl">
-                      <IoMdAddCircleOutline />
-                    </span>
-                  </Button>
-                )}
+                {userEmail === "admin@gmail.com" && <Button
+                  style={{ background: "#007DFC", color: "white" }}
+                  onClick={addProductHandler}
+                >
+                  Add{" "}
+                  <span className="text-xl">
+                    <IoMdAddCircleOutline />
+                  </span>
+                </Button>}
                 <MTableToolbar {...props} />
               </div>
             ),
@@ -418,7 +377,7 @@ const Table = () => {
               placeholder="Product Price"
               type="number"
               value={productPrice}
-              onChange={(e) => setProductPrice(Number(e.target.value))}
+              onChange={(e) => setProductPrice(e.target.value)}
             />
           </div>
           <div className="py-3 mb-2">
@@ -431,7 +390,7 @@ const Table = () => {
               placeholder="Porduct Stock"
               type="number"
               value={productStock}
-              onChange={(e) => setProductStock(Number(e.target.value))}
+              onChange={(e) => setProductStock(e.target.value)}
             />
           </div>
           <Button
