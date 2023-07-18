@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Slider from "@material-ui/core/Slider";
 import { db } from "../firebase-config";
 import {
   collection,
@@ -73,11 +74,28 @@ const Table = () => {
     color: "black",
   };
 
+  const [value, setValue] = React.useState([2, 10]);
   const [isAddForm, setIsAddForm] = useState(true);
   const [userEmail, setUserEmail] = useState("");
   const [productsInfo, setProducts] = useState({ loading: true, products: [] });
   const { products } = productsInfo;
+  const [unChangebleProducts, setUnChangebleProducts] = useState([]);
   const productsCollectionRef = collection(db, "products");
+
+  // Changing State when volume increases/decreases
+  const rangeSelector = (event, newValue) => {
+    setValue(newValue);
+    const [min, max] = newValue;
+
+    setProducts(() => {
+      const filteredProducts = unChangebleProducts?.filter((product) => {
+        if (product.price >= min && product.price <= max) {
+          return product;
+        }
+      });
+      return { loading: false, products: [...filteredProducts] };
+    });
+  };
 
   const [tableColumns, setTableColumns] = useState([
     {
@@ -154,6 +172,7 @@ const Table = () => {
   const [open, setOpen] = useState(false);
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
+
   useEffect(() => {
     const getProducts = async () => {
       const data = await getDocs(productsCollectionRef);
@@ -161,6 +180,9 @@ const Table = () => {
         loading: false,
         products: data.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
       });
+      setUnChangebleProducts(
+        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
     };
     getProducts();
 
@@ -190,8 +212,6 @@ const Table = () => {
         stock: productStock,
       });
 
-      console.log(product.id);
-
       setProducts((prevProductsInfo) => {
         return {
           loading: false,
@@ -206,6 +226,19 @@ const Table = () => {
             },
           ],
         };
+      });
+
+      setUnChangebleProducts((prevProducts) => {
+        return [
+          ...prevProducts,
+          {
+            id: product.id,
+            name: productName,
+            image: productImage,
+            price: productPrice,
+            stock: productStock,
+          },
+        ];
       });
 
       toast.success("Successfully Added", {
@@ -236,6 +269,7 @@ const Table = () => {
           }
         );
 
+        setUnChangebleProducts([...updatedProducts]);
         return {
           loading: false,
           products: updatedProducts,
@@ -272,6 +306,7 @@ const Table = () => {
           return product;
         });
 
+        setUnChangebleProducts([...updatedProducts]);
         return { loading: false, products: [...updatedProducts] };
       });
 
@@ -344,10 +379,34 @@ const Table = () => {
       >
         <div
           className={`bg-white h-[150px] w-full flex justify-center items-center ${
-            userEmail === "admin@gmail.com" ? "mt-[90px]" : "mt-[30px]"
+            userEmail === "admin@gmail.com" ? "mt-[250px]" : "mt-[150px]"
           }`}
         >
           <InfinitySpin width="200" color="#007dfc" />
+        </div>
+      </div>
+      {/* silder component */}
+      <div className="flex justify-start">
+        <div>
+          <div
+            style={{
+              margin: "auto",
+              display: "block",
+              width: "300px",
+            }}
+          >
+            <p className="mb-2">
+              Products between <span className="font-bold">₹{value[0]}</span>{" "}
+              and <span className="font-bold">₹{value[1]}</span>
+            </p>
+            <Slider
+              value={value}
+              onChange={rangeSelector}
+              valueLabelDisplay="auto"
+              min={10}
+              max={500}
+            />
+          </div>
         </div>
       </div>
       <ThemeProvider theme={defaultMaterialTheme}>
@@ -356,19 +415,24 @@ const Table = () => {
             Toolbar: (props) => (
               <div>
                 {userEmail === "admin@gmail.com" && (
-                  <Button
-                    style={{ background: "#007DFC", color: "white" }}
-                    onClick={addProductHandler}
-                  >
-                    Add{" "}
-                    <span className="text-xl">
-                      <IoMdAddCircleOutline />
-                    </span>
-                  </Button>
+                  <>
+                    <Button
+                      style={{ background: "#007DFC", color: "white" }}
+                      onClick={addProductHandler}
+                    >
+                      Add{" "}
+                      <span className="text-xl">
+                        <IoMdAddCircleOutline />
+                      </span>
+                    </Button>
+                  </>
                 )}
                 <MTableToolbar {...props} />
               </div>
             ),
+          }}
+          options={{
+            exportButton: true,
           }}
           icons={tableIcons}
           columns={tableColumns}
