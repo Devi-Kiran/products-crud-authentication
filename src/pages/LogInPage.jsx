@@ -7,24 +7,24 @@ import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { Link } from "react-router-dom";
 
 function LogInPage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState({ email: "", password: "" });
   const [isEmailValid, setEmailValid] = useState(false);
   const [isPasswordValid, setPasswordValid] = useState(false);
   const [isIncorrectInfo, setIncorrectInfo] = useState(false);
   const { email, password } = user;
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      currentUser?.uid && navigate("/dashboard");
-    });
-  }, []);
 
   const inputHandler = (e) => {
     setUser((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      currentUser?.uid && navigate("/dashboard");
+    });
+  }, []);
 
   const logIn = async () => {
     const enteredEmail = email;

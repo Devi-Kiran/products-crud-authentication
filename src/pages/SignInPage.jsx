@@ -7,11 +7,11 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 function SignInPage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState({ email: "", password: "" });
   const [isEmailValid, setEmailValid] = useState(false);
   const [isPasswordValid, setPasswordValid] = useState(false);
   const { email, password } = user;
-  const navigate = useNavigate();
 
   const inputHandler = (e) => {
     setUser((prev) => {
@@ -20,14 +20,14 @@ function SignInPage() {
   };
 
   const signUp = async (e) => {
-    e.preventDefault();
     const enteredEmail = email;
     const emailPattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
     const emailResult = emailPattern.test(enteredEmail);
     const enteredPassword = password;
     const passwordPattern = /^[a-zA-Z0-9]{8,20}$/;
     const passwordResult = passwordPattern.test(enteredPassword);
-
+    
+    e.preventDefault();
     setEmailValid(!emailResult);
     setPasswordValid(!passwordResult);
 

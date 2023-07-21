@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Table from "../components/Table";
+import Table from "../components/dashboard/Table";
 import { BsFacebook } from "react-icons/bs";
 import { AiFillTwitterCircle } from "react-icons/ai";
 import { AiFillGithub } from "react-icons/ai";
