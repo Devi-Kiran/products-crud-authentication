@@ -570,7 +570,6 @@ const Table = () => {
                   <>
                     <Button
                       style={{ background: "#007DFC", color: "white" }}
-                      // onClick={addProductHandler}
                       onClick={onOpenAddProductForm}
                     >
                       Add{" "}
@@ -642,6 +641,13 @@ const Table = () => {
 
 export default Table;
 
+
+
+
+
+
+
+
 // import React, { useState, useEffect } from "react";
 // import Slider from "@material-ui/core/Slider";
 // import { db } from "../../firebase-config";
@@ -661,7 +667,6 @@ export default Table;
 // import { ThemeProvider, createTheme } from "@mui/material";
 // import { forwardRef } from "react";
 // import "react-responsive-modal/styles.css";
-// import { Modal } from "react-responsive-modal";
 // import EditProductFormModal from "./EditProductFormModal";
 // import AddProductFormModal from "./AddProductFormModal";
 // import Button from "@material-ui/core/Button";
@@ -690,6 +695,11 @@ export default Table;
 // import { AiOutlineFile } from "react-icons/ai";
 
 // const Table = () => {
+//   const headerCSS = {
+//     fontWeight: 900,
+//     textTransform: "capitalize",
+//     color: "black",
+//   };
 //   const tableIcons = {
 //     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
 //     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -718,11 +728,30 @@ export default Table;
 //     )),
 //     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 //   };
-
-//   const headerCSS = {
-//     fontWeight: 900,
-//     textTransform: "capitalize",
-//     color: "black",
+//   const adminColumn = {
+//     title: "edit",
+//     field: "buttons",
+//     headerStyle: { ...headerCSS },
+//     render: (rowData) => (
+//       <div className="flex flex-col md:flex-row gap-1 lg:gap-0 justify-evenly">
+//         <Button
+//           style={{ background: "#007DFC", color: "white" }}
+//           onClick={() => editHandler(rowData)}
+//         >
+//           <span className="text-xl">
+//             <BiEdit />
+//           </span>
+//         </Button>{" "}
+//         <Button
+//           style={{ background: "#007DFC", color: "white" }}
+//           onClick={() => deleteProduct(rowData)}
+//         >
+//           <span className="text-xl">
+//             <AiOutlineDelete />
+//           </span>
+//         </Button>
+//       </div>
+//     ),
 //   };
 
 //   const [value, setValue] = React.useState([2, 10]);
@@ -733,21 +762,23 @@ export default Table;
 //   const productsCollectionRef = collection(db, "products");
 //   const defaultMaterialTheme = createTheme();
 
-//   // Changing State when volume increases/decreases
-//   const rangeSelector = (event, newValue) => {
-//     setValue(newValue);
-//     const [min, max] = newValue;
+//   const [addProductName, setAddProductName] = useState("");
+//   const [addProductImage, setAddProductImage] = useState("");
+//   const [addProductFile, setAddProductFile] = useState({});
+//   const [addProductPrice, setAddProductPrice] = useState(0);
+//   const [addProductStock, setAddProductStock] = useState(0);
+//   const [editProductId, setEditProductId] = useState("");
+//   const [editProductName, setEditProductName] = useState("");
+//   const [editProductImage, setEditProductImage] = useState("");
+//   const [editProductFile, setEditProductFile] = useState({});
+//   const [editFileUrl, setEditFileUrl] = useState("");
+//   const [editProductPrice, setEditProductPrice] = useState(0);
+//   const [editProductStock, setEditProductStock] = useState(0);
 
-//     setProducts(() => {
-//       const filteredProducts = unChangebleProducts?.filter((product) => {
-//         if (product.price >= min && product.price <= max) {
-//           return product;
-//         }
-//       });
-//       return { loading: false, products: [...filteredProducts] };
-//     });
-//   };
-
+//   const [openAddProductForm, setOpenAddProductForm] = useState(false);
+//   const [openEditProductForm, setOpenEditProductForm] = useState(false);
+//   const [selectedRows, setSelectedRows] = useState([]);
+//   const [productsIds, setProductIds] = useState([]);
 //   const [tableColumns, setTableColumns] = useState([
 //     {
 //       title: "Image",
@@ -796,83 +827,25 @@ export default Table;
 //     },
 //   ]);
 
-//   const adminColumn = {
-//     title: "edit",
-//     field: "buttons",
-//     headerStyle: { ...headerCSS },
-//     render: (rowData) => (
-//       <div className="flex flex-col md:flex-row gap-1 lg:gap-0 justify-evenly">
-//         <Button
-//           style={{ background: "#007DFC", color: "white" }}
-//           onClick={() => editHandler(rowData)}
-//         >
-//           <span className="text-xl">
-//             <BiEdit />
-//           </span>
-//         </Button>{" "}
-//         <Button
-//           style={{ background: "#007DFC", color: "white" }}
-//           onClick={() => deleteProduct(rowData)}
-//         >
-//           <span className="text-xl">
-//             <AiOutlineDelete />
-//           </span>
-//         </Button>
-//       </div>
-//     ),
-//   };
-
-//   useEffect(() => {
-//     if (userEmail === "admin@gmail.com") {
-//       setTableColumns((prevColumns) => {
-//         return [...prevColumns, adminColumn];
-//       });
-//     }
-//   }, [userEmail]);
-
-//   ////////////////////////for edit form inputs//////////////////////////
-//   const [addProductName, setAddProductName] = useState("");
-//   const [addProductImage, setAddProductImage] = useState("");
-//   const [addProductFile, setAddProductFile] = useState({});
-//   const [addProductPrice, setAddProductPrice] = useState(0);
-//   const [addProductStock, setAddProductStock] = useState(0);
-
-//   const [editProductId, setEditProductId] = useState("");
-//   const [editProductName, setEditProductName] = useState("");
-//   const [editProductImage, setEditProductImage] = useState("");
-//   const [editProductFile, setEditProductFile] = useState({});
-//   const [editFileUrl, setEditFileUrl] = useState("");
-//   const [editProductPrice, setEditProductPrice] = useState(0);
-//   const [editProductStock, setEditProductStock] = useState(0);
-
-//   ////////////////////modal show and hidden/////////////////////////
-
-//   const [openAddProductForm, setOpenAddProductForm] = useState(false);
 //   const onOpenAddProductForm = () => setOpenAddProductForm(true);
 //   const onCloseAddProductForm = () => setOpenAddProductForm(false);
-
-//   const [openEditProductForm, setOpenEditProductForm] = useState(false);
 //   const onOpenEditProductForm = () => setOpenEditProductForm(true);
 //   const onCloseEditProductForm = () => setOpenEditProductForm(false);
 
-//   useEffect(() => {
-//     const getProducts = async () => {
-//       const data = await getDocs(productsCollectionRef);
-//       setProducts({
-//         loading: false,
-//         products: data.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
-//       });
-//       setUnChangebleProducts(
-//         data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-//       );
-//     };
-//     getProducts();
-//     onAuthStateChanged(auth, (currentUser) => {
-//       setUserEmail(currentUser?.email);
-//     });
-//   }, []);
+//   const rangeSelector = (event, newValue) => {
+//     setValue(newValue);
+//     const [min, max] = newValue;
 
-//   ////////////////show table row data in inputs////////////////////
+//     setProducts(() => {
+//       const filteredProducts = unChangebleProducts?.filter((product) => {
+//         if (product.price >= min && product.price <= max) {
+//           return product;
+//         }
+//       });
+//       return { loading: false, products: [...filteredProducts] };
+//     });
+//   };
+
 //   const editHandler = (rowData) => {
 //     setEditProductId(rowData?.id);
 //     setEditProductName(rowData?.name);
@@ -899,7 +872,6 @@ export default Table;
 //     });
 //   };
 
-//   //////////////////delete product in firebase//////////////////////
 //   const deleteProduct = async ({ id }) => {
 //     try {
 //       const productDoc = doc(db, "products", id);
@@ -934,7 +906,6 @@ export default Table;
 //     }
 //   };
 
-//   /////////////////////to create product///////////////////////
 //   const addProductsHandler = async (e) => {
 //     e.preventDefault();
 //     onCloseEditProductForm();
@@ -1136,10 +1107,6 @@ export default Table;
 //     }
 //   };
 
-//   //////////////////////////////////
-//   const [selectedRows, setSelectedRows] = useState([]);
-//   const [productsIds, setProductIds] = useState([]);
-
 //   const handleRowSelection = (rows) => {
 //     setSelectedRows(rows);
 //     setProductIds(() => {
@@ -1179,6 +1146,31 @@ export default Table;
 //     });
 //   };
 
+//   useEffect(() => {
+//     if (userEmail === "admin@gmail.com") {
+//       setTableColumns((prevColumns) => {
+//         return [...prevColumns, adminColumn];
+//       });
+//     }
+//   }, [userEmail]);
+
+//   useEffect(() => {
+//     const getProducts = async () => {
+//       const data = await getDocs(productsCollectionRef);
+//       setProducts({
+//         loading: false,
+//         products: data.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+//       });
+//       setUnChangebleProducts(
+//         data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+//       );
+//     };
+//     getProducts();
+//     onAuthStateChanged(auth, (currentUser) => {
+//       setUserEmail(currentUser?.email);
+//     });
+//   }, []);
+
 //   return (
 //     <div className="p-2 relative overflow-scroll sm:overflow-hidden">
 //       <div
@@ -1194,7 +1186,7 @@ export default Table;
 //           <InfinitySpin width="200" color="#007dfc" />
 //         </div>
 //       </div>
-//       {/* slider component */}
+      
 //       <div className="flex justify-start">
 //         <div>
 //           <div
@@ -1218,6 +1210,7 @@ export default Table;
 //           </div>
 //         </div>
 //       </div>
+
 //       <ThemeProvider theme={defaultMaterialTheme}>
 //         <MaterialTable
 //           components={{
@@ -1244,6 +1237,16 @@ export default Table;
 //                       onClick={handleDeleteSelectedRows}
 //                     >
 //                       Delete Selected Rows
+//                     </Button>
+//                     <Button
+//                       style={{
+//                         background: "#007DFC",
+//                         color: "#ffffff",
+//                         marginLeft: "10px",
+//                       }}
+//                       onClick={handleDeleteSelectedRows}
+//                     >
+//                       show graph
 //                     </Button>
 //                   </>
 //                 )}
