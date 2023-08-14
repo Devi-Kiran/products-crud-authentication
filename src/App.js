@@ -5,8 +5,9 @@ import { Route,Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import PrivateRoutes from "./PrivateRoutes";
 import SignInPage from "./pages/SignInPage";
-import StockChart from "./pages/StockChart";
+import StockChart from "./pages/ProductsStockChart";
 import NotFound from "./pages/NotFound";
+import ProductsCountPriceChart from "./pages/ProductsCountPriceChart";
 
 function App() {
   return (
@@ -14,10 +15,11 @@ function App() {
       <Routes>
         <Route element={<PrivateRoutes/>}>
           <Route path="/dashboard" element={<DashBoard/>} exact/>
+          <Route path="/products-stock-chart" element={<StockChart/>}/>
+          <Route path="/products-count-price-chart" element={<ProductsCountPriceChart/>}/>
         </Route>
         <Route path="/" element={<LogInPage/>}/>
         <Route path="signin" element={<SignInPage/>}/>
-        <Route path="/stock-chart" element={<StockChart/>}/>
         <Route path="*" element={<NotFound/>}/>
       </Routes>
       <ToastContainer/>
