@@ -21,52 +21,6 @@ function ProductsCountPriceChart() {
     "901to1000": 0,
   });
 
-  useEffect(() => {
-    productsPrice?.forEach((price) => {
-      if (price >= 0 && price <= 100) {
-        setProductsCount((prev) => {
-          return { ...prev, "0to100": prev["0to100"] + 1 };
-        });
-      } else if (price >= 101 && price <= 200) {
-        setProductsCount((prev) => {
-          return { ...prev, "101to200": prev["101to200"] + 1 };
-        });
-      } else if (price >= 201 && price <= 300) {
-        setProductsCount((prev) => {
-          return { ...prev, "201to300": prev["201to300"] + 1 };
-        });
-      } else if (price >= 301 && price <= 400) {
-        setProductsCount((prev) => {
-          return { ...prev, "301to400": prev["301to400"] + 1 };
-        });
-      } else if (price >= 401 && price <= 500) {
-        setProductsCount((prev) => {
-          return { ...prev, "401to500": prev["401to500"] + 1 };
-        });
-      } else if (price >= 501 && price <= 600) {
-        setProductsCount((prev) => {
-          return { ...prev, "501to600": prev["501to600"] + 1 };
-        });
-      } else if (price >= 601 && price <= 700) {
-        setProductsCount((prev) => {
-          return { ...prev, "601to700": prev["601to700"] + 1 };
-        });
-      } else if (price >= 701 && price <= 800) {
-        setProductsCount((prev) => {
-          return { ...prev, "701to800": prev["701to800"] + 1 };
-        });
-      } else if (price >= 801 && price <= 900) {
-        setProductsCount((prev) => {
-          return { ...prev, "801to900": prev["801to900"] + 1 };
-        });
-      } else if (price >= 901 && price <= 1000) {
-        setProductsCount((prev) => {
-          return { ...prev, "901to1000": prev["901to1000"] + 1 };
-        });
-      }
-    });
-  }, [productsPrice]);
-
   const data = {
     labels: [
       "0 - 100",
@@ -114,6 +68,52 @@ function ProductsCountPriceChart() {
     };
     getProducts();
   }, []);
+
+  useEffect(() => {
+    productsPrice?.forEach((price) => {
+      if (price >= 0 && price <= 100) {
+        setProductsCount((prev) => {
+          return { ...prev, "0to100": prev["0to100"] + 1 };
+        });
+      } else if (price >= 101 && price <= 200) {
+        setProductsCount((prev) => {
+          return { ...prev, "101to200": prev["101to200"] + 1 };
+        });
+      } else if (price >= 201 && price <= 300) {
+        setProductsCount((prev) => {
+          return { ...prev, "201to300": prev["201to300"] + 1 };
+        });
+      } else if (price >= 301 && price <= 400) {
+        setProductsCount((prev) => {
+          return { ...prev, "301to400": prev["301to400"] + 1 };
+        });
+      } else if (price >= 401 && price <= 500) {
+        setProductsCount((prev) => {
+          return { ...prev, "401to500": prev["401to500"] + 1 };
+        });
+      } else if (price >= 501 && price <= 600) {
+        setProductsCount((prev) => {
+          return { ...prev, "501to600": prev["501to600"] + 1 };
+        });
+      } else if (price >= 601 && price <= 700) {
+        setProductsCount((prev) => {
+          return { ...prev, "601to700": prev["601to700"] + 1 };
+        });
+      } else if (price >= 701 && price <= 800) {
+        setProductsCount((prev) => {
+          return { ...prev, "701to800": prev["701to800"] + 1 };
+        });
+      } else if (price >= 801 && price <= 900) {
+        setProductsCount((prev) => {
+          return { ...prev, "801to900": prev["801to900"] + 1 };
+        });
+      } else if (price >= 901 && price <= 1000) {
+        setProductsCount((prev) => {
+          return { ...prev, "901to1000": prev["901to1000"] + 1 };
+        });
+      }
+    });
+  }, [productsPrice]);
 
   return (
     <Layout>
