@@ -25,6 +25,9 @@ function Layout({children}) {
   const logOut = async () => {
     try {
       await signOut(auth);
+      localStorage.removeItem("name");
+      localStorage.removeItem("email");
+      localStorage.removeItem("profilePic");
       navigate("/");
     } catch (e) {
       console.log(e.message);
@@ -157,7 +160,7 @@ function Layout({children}) {
               <div className="flex items-center ml-3">
                 <div className="flex items-center">
                   <p className="hidden sm:block font-bold capitalize mr-2 items-center">
-                    welcome {extractUsernameFromEmail(userEmail?.email)}
+                    welcome {localStorage.getItem("name") || extractUsernameFromEmail(userEmail?.email)}
                   </p>
                   <button
                     onClick={() => setShowUserInfo(!showUserInfo)}
@@ -166,7 +169,7 @@ function Layout({children}) {
                     aria-expanded="false"
                     data-dropdown-toggle="dropdown-user"
                   >
-                    <span className="text-brandColor bg-white text-[32px]"><FaRegUserCircle/></span>
+                    <span className="text-brandColor bg-white text-[32px]">{localStorage.getItem("profilePic") && <img className="rounded-full w-8 h-8 object-cover" src={localStorage.getItem("profilePic")}/> || <FaRegUserCircle/>}</span>
                   </button>
                 </div>
                 <div

@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import EntryPageSideBox from "../components/EntryPageSideBox";
 import Button from "@material-ui/core/Button";
-import { auth } from "../firebase-config";
-import { useNavigate } from "react-router-dom";
+import { auth, signInWithGoogle } from "../firebase-config";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInAnonymously,
+} from "firebase/auth";
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -26,7 +29,7 @@ function SignInPage() {
     const enteredPassword = password;
     const passwordPattern = /^[a-zA-Z0-9]{8,20}$/;
     const passwordResult = passwordPattern.test(enteredPassword);
-    
+
     e.preventDefault();
     setEmailValid(!emailResult);
     setPasswordValid(!passwordResult);
@@ -56,11 +59,8 @@ function SignInPage() {
       <EntryPageSideBox />
 
       <div className="h-screen md:w-2/4 px-3 grow flex justify-center items-center">
-        <div className="shadow-xl rounded-xl px-3 py-5">
-          <h1 className="text-2xl font-bold mb-1">hey,hello</h1>
-          <p className="text-slate-400 capitalize mb-3">
-            Please provide the required information for registration.
-          </p>
+        <div className="shadow-xl rounded-xl px-3 py-5 w-[350px]">
+          <h1 className="text-3xl font-bold mb-1 text-center">signup</h1>
           <form autoComplete="off">
             <div>
               <div className="py-1">
@@ -111,18 +111,52 @@ function SignInPage() {
                   </p>
                 )}
               </div>
-              <div className="flex justify-between mt-3">
-                <Button
-                  onClick={signUp}
-                  variant="contained"
-                  color="primary"
-                  style={{ background: "#007DFC", color: "white" }}
-                >
-                  sign in
-                </Button>
-              </div>
+
+              <Button
+                onClick={signUp}
+                variant="contained"
+                color="primary"
+                style={{
+                  background: "#007DFC",
+                  color: "white",
+                  width: "100%",
+                  padding: "7px 0px 7px 0px",
+                  marginTop: "20px",
+                }}
+              >
+                sign in
+              </Button>
             </div>
           </form>
+
+          <div className="text-center my-5">
+            <p className="mb-[-5px]">
+              Already have an account?{" "}
+              <Link to="/" className="text-brandColor font-bold">
+                Login
+              </Link>
+            </p>
+
+            <div className="relative inline-flex items-center justify-center w-11/12">
+              <hr className="w-11/12 h-px my-8 bg-gray-400 border-0 dark:bg-gray-700" />
+              <span className="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">
+                Or
+              </span>
+            </div>
+            
+            <button
+              className="border-2 border-brandColor rounded font-bold w-full"
+              onClick={() => signInWithGoogle()}
+            >
+              <div className="flex items-center justify-center px-3 py-1.5 justify-center">
+                <img
+                  className="w-5 h-5 mt-[1.5px] mr-2"
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2008px-Google_%22G%22_Logo.svg.png"
+                />
+                Continue With Google
+              </div>
+            </button>
+          </div>
         </div>
       </div>
     </div>
