@@ -5,6 +5,8 @@ import { auth, signInWithGoogle } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { Link } from "react-router-dom";
+import { RxMobile } from "react-icons/rx";
+import LogInWithPhone from "../components/LoginInWithPhone";
 
 function LogInPage() {
   const navigate = useNavigate();
@@ -13,19 +15,17 @@ function LogInPage() {
   const [isPasswordValid, setPasswordValid] = useState(false);
   const [isIncorrectInfo, setIncorrectInfo] = useState(false);
   const { email, password } = user;
+  
+  const [isOpenLogInWithPhoneForm,setOpenLogInWithPhoneForm] = useState(false);
+  const openLogInWithPhoneForm = () => setOpenLogInWithPhoneForm(true);
+  const closeLogInWithPhoneForm = () => setOpenLogInWithPhoneForm(false);
 
   const inputHandler = (e) => {
     setUser((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      currentUser?.uid && navigate("/dashboard");
-    });
-  }, []);
-
+  
   const logIn = async () => {
     const enteredEmail = email;
     const emailPattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
@@ -36,9 +36,9 @@ function LogInPage() {
 
     setEmailValid(!emailResult);
     setPasswordValid(!passwordResult);
-
+    
     if (!emailResult || !passwordResult) return;
-
+    
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
@@ -48,6 +48,12 @@ function LogInPage() {
       }
     }
   };
+  
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      currentUser?.uid && navigate("/dashboard");
+    });
+  }, []);
 
   return (
     <div className="bg-white h-screen flex">
@@ -148,7 +154,7 @@ function LogInPage() {
             </div>
 
             <button
-              className="border-2 border-brandColor rounded font-bold w-full"
+              className="border-2 border-brandColor rounded font-bold w-full mb-2"
               onClick={() => signInWithGoogle()}
             >
               <div className="flex items-center justify-center px-3 py-1.5 justify-center">
@@ -159,9 +165,21 @@ function LogInPage() {
                 Continue With Google
               </div>
             </button>
+
+            <button
+              className="border-2 border-brandColor rounded font-bold w-full"
+              onClick={openLogInWithPhoneForm}
+            >
+              <div className="flex items-center justify-center px-3 py-1.5 justify-center">
+                <RxMobile  className="w-5 h-5 mt-[1.5px] mr-2"/>
+                Continue With Phone
+              </div>
+            </button>
           </div>
         </div>
       </div>
+      <LogInWithPhone loginPage isOpenLogInWithPhoneForm={isOpenLogInWithPhoneForm} closeLogInWithPhoneForm={closeLogInWithPhoneForm}/>
+      <div id="recapcha-container"></div>
     </div>
   );
 }

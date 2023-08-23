@@ -8,6 +8,8 @@ import {
   createUserWithEmailAndPassword,
   signInAnonymously,
 } from "firebase/auth";
+import { RxMobile } from "react-icons/rx";
+import LogInWithPhone from "../components/LoginInWithPhone";
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -15,6 +17,10 @@ function SignInPage() {
   const [isEmailValid, setEmailValid] = useState(false);
   const [isPasswordValid, setPasswordValid] = useState(false);
   const { email, password } = user;
+
+  const [isOpenLogInWithPhoneForm,setOpenLogInWithPhoneForm] = useState(false);
+  const openLogInWithPhoneForm = () => setOpenLogInWithPhoneForm(true);
+  const closeLogInWithPhoneForm = () => setOpenLogInWithPhoneForm(false);
 
   const inputHandler = (e) => {
     setUser((prev) => {
@@ -145,7 +151,7 @@ function SignInPage() {
             </div>
             
             <button
-              className="border-2 border-brandColor rounded font-bold w-full"
+              className="border-2 border-brandColor rounded font-bold w-full mb-2"
               onClick={() => signInWithGoogle()}
             >
               <div className="flex items-center justify-center px-3 py-1.5 justify-center">
@@ -156,9 +162,21 @@ function SignInPage() {
                 Continue With Google
               </div>
             </button>
+
+            <button
+              className="border-2 border-brandColor rounded font-bold w-full"
+              onClick={openLogInWithPhoneForm}
+            >
+              <div className="flex items-center justify-center px-3 py-1.5 justify-center">
+                <RxMobile  className="w-5 h-5 mt-[1.5px] mr-2"/>
+                Continue With Phone
+              </div>
+            </button>
           </div>
         </div>
       </div>
+      <LogInWithPhone isOpenLogInWithPhoneForm={isOpenLogInWithPhoneForm} closeLogInWithPhoneForm={closeLogInWithPhoneForm}/>
+      <div id="recapcha-container"></div>
     </div>
   );
 }

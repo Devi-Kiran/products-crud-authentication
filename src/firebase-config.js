@@ -31,4 +31,4 @@ const firebaseConfig = {
     }).catch(e => {
       console.log(e.message);
     })
-  }
+  } 
